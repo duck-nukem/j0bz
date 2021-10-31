@@ -9,13 +9,13 @@ COPY . /opt/app
 RUN pip install -r /opt/app/requirements.txt
 
 FROM gcr.io/distroless/python3
-ENV PYTHONPATH=/usr/local/lib/python3.7/site-packages
+ENV PYTHONPATH=/usr/local/lib/python3.10/site-packages
 
 # Enable this to allow PyCharm to generate skeletons properly
 COPY --from=build /bin/ /bin/
 
 # application and its dependencies
-COPY --from=build /usr/local/lib/python3.7/site-packages $PYTHONPATH
+COPY --from=build $PYTHONPATH $PYTHONPATH
 COPY --from=build /opt/app/ /opt/app/
 
 WORKDIR /opt/app
