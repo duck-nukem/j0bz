@@ -1,0 +1,6 @@
+version: "3.6"
+services:
+  app:
+    build: .
+    volumes:
+      - ./:/opt/app:cached
