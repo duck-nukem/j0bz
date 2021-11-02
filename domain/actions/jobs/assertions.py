@@ -2,7 +2,7 @@ from domain.actions.jobs.exceptions import UnauthorizedPostException, AuthorIsNo
 from domain.entities.user import Employer
 
 
-def assert_author_is_employer(poster):
+def assert_author_is_employer(poster: Employer):
     if not isinstance(poster, Employer):
         raise UnauthorizedPostException
 

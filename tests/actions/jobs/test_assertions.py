@@ -3,20 +3,19 @@ from unittest import TestCase
 
 from domain.actions.jobs.assertions import assert_author_is_employer, assert_author_is_original_poster
 from domain.actions.jobs.exceptions import UnauthorizedPostException, AuthorIsNotOPException
-from domain.entities.user import User, Candidate
-from tests.factories import EmployerFactory, JobFactory
+from tests.factories import EmployerFactory, JobFactory, CandidateFactory, UserFactory
 
 
 class TestAuthorIsEmployerAssertion(TestCase):
     def test_unregistered_employer_cannot_post(self):
-        unregistered_user = User(name='Anonymous')
+        unregistered_user = UserFactory()
 
         with self.assertRaises(UnauthorizedPostException):
             # noinspection PyTypeChecker
             assert_author_is_employer(unregistered_user)
 
     def test_candidate_cannot_post(self):
-        candidate = Candidate(name='John')
+        candidate = CandidateFactory()
 
         with self.assertRaises(UnauthorizedPostException):
             # noinspection PyTypeChecker
