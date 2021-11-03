@@ -1,26 +1,40 @@
+from typing import Dict
+
 from sqlalchemy import select
 
 from domain.entities.user import User
-from providers.databases.postgres.connection import database
-from providers.databases.postgres.models.user import User as UserModel, StripeUser
+from domain.repositories import Repository
+from providers.databases import GenericDAO
+from providers.databases.postgres.connection import connect
+from providers.databases.postgres.models.user import User as UserModel
 
 
-class UserRepository:
-    async def create(self, user: User):
-        user_model = UserModel(**user.__dict__)
-        database.add(user_model)
-        await database.commit()
+class UserRepository(Repository):
+    def __init__(self) -> None:
+        self.dao = GenericDAO(UserModel)
 
-    async def link_payment_details(self, user: User, payment_user_id: str) -> None:
-        user = await self.get_by_username(user.username)
-        stripe_user = StripeUser(stripe_customer_id=payment_user_id, user_id=user.id)
+    def to_db(self, user: User) -> Dict:
+        user_dict = user.__dict__
 
-        database.add(stripe_user)
-        await database.commit()
+        if 'id' in user_dict.keys() and user_dict['id'] is None:
+            del user_dict['id']
 
-    async def get_by_username(self, username: str):
-        query = select(UserModel).filter_by(username=username)
-        results = await database.execute(query)
-        (result,) = results.one()
+        return user_dict
 
-        return result
+    def from_db(self, database_instance):
+        instance_dict = {
+            'name': database_instance.name,
+            'username': database_instance.username,
+            'email_address': database_instance.email_address,
+            'type': database_instance.type,
+            'id': database_instance.id,
+        }
+        return User(**instance_dict)
+
+    def get_by_username(self, username: str) -> User:
+        with connect() as db:
+            query = select(UserModel).filter_by(username=username)
+            results = db.execute(query)
+            (result,) = results.one()
+
+            return self.from_db(result)

@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from domain.entities import Entity
-
 
 class UserType(Enum):
     employer = 'EMPLOYER'
@@ -10,14 +8,13 @@ class UserType(Enum):
 
 
 @dataclass
-class User(Entity):
+class User:
     name: str
     username: str
     email_address: str
     type: UserType
 
-    def __eq__(self, other):
-        return self.name == other.name
+    id: int | None = None
 
 
 @dataclass

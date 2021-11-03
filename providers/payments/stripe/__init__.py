@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List
 
 import stripe
 from stripe import Customer
@@ -17,7 +17,7 @@ def list_active_payment_plans(limit=10) -> List[StripePaymentPlan]:
     return stripe.Price.list(limit=limit, active=True)['data']
 
 
-def get_customer_by_email(email_address: str) -> Optional[Customer]:
+def get_customer_by_email(email_address: str) -> Customer | None:
     customer = stripe.Customer.list(email=email_address, limit=1)
 
     if customer.is_empty:
@@ -26,7 +26,7 @@ def get_customer_by_email(email_address: str) -> Optional[Customer]:
     return customer
 
 
-def create_customer(user: User) -> str:
+def create_payment_account(user: User) -> str:
     existing_customer = get_customer_by_email(user.email_address)
 
     if existing_customer is not None:
@@ -48,7 +48,7 @@ def prepare_payment(
         payment_method_types=['card'],
         mode='subscription',
         customer=customer['id'],
-        client_reference_id=job.unique_id,
+        client_reference_id=job.id,
         success_url=PAYMENT_SUCCESS_URL,
         cancel_url=PAYMENT_CANCEL_URL,
     )

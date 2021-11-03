@@ -9,8 +9,8 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(256), nullable=False)
-    username = Column(String(64), nullable=False)
-    email_address = Column(Unicode(256), nullable=False)
+    username = Column(String(64), nullable=False, index=True)
+    email_address = Column(Unicode(256), nullable=False, index=True)
     type = Column(Enum(UserType), nullable=False)
 
 

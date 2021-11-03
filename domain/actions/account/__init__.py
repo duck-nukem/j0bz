@@ -1,10 +1,12 @@
+from domain.actions.payments import link_payment_details
 from domain.entities.user import User
 from domain.repositories.user_repository import UserRepository
-from providers.payments.stripe import create_customer
+from providers.payments.stripe import create_payment_account
+
+user_repository = UserRepository()
 
 
-async def create_user(user: User):
-    user_repository = UserRepository()
-    await user_repository.create(user)
-    payment_user_id = create_customer(user)
-    await user_repository.link_payment_details(user, payment_user_id)
+def create_user(user: User):
+    user = user_repository.create(user)
+    payment_user_id = create_payment_account(user)
+    link_payment_details(user, payment_user_id)

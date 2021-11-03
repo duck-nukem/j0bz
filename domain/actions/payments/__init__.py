@@ -1,7 +1,9 @@
 from stripe.api_resources.checkout import Session
 
 from domain.entities.job import Job
-from domain.entities.user import Employer
+from domain.entities.user import Employer, User
+from providers.databases import GenericDAO
+from providers.databases.postgres.models import StripeUser
 from providers.payments.stripe import prepare_payment, StripeSubscription
 
 PRODUCT_PRICE_ID = 'price_1Jr64YBrjtXa4dr1dWRZ8Jcn'
@@ -23,3 +25,8 @@ def generate_payment_url(
     set_job_payment_id(job, payment)
 
     return payment['url']
+
+
+def link_payment_details(user: User, payment_user_id: str) -> None:
+    stripe_dao = GenericDAO(StripeUser)
+    stripe_dao.create({'stripe_customer_id': payment_user_id, 'user_id': user.id})

@@ -1,7 +1,9 @@
+from uuid import uuid4
+
 import factory
 from factory import SubFactory
 
-from domain.entities.job import Job
+from domain.entities.job import Job, Salary, Interview
 from domain.entities.user import Employer, Candidate, User, UserType
 
 
@@ -36,3 +38,13 @@ class JobFactory(factory.Factory):
 
     author = SubFactory(EmployerFactory)
     title = factory.Faker('job')
+    location = 'GB'
+    job_description = '## Markdown'
+    salary = Salary(
+        currency_code='USD',
+        min=100,
+    )
+    interview = Interview(
+        rounds=2,
+    )
+    benefits = []
