@@ -5,6 +5,13 @@ from typing import List
 from domain.entities.user import Employer
 
 
+class JobStatus(Enum):
+    DRAFT = 'draft'
+    ACTIVE = 'active'
+    AWAITING_PAYMENT = 'awaiting_payment'
+    PAYMENT_EXPIRED = 'expired'
+
+
 class Benefit(Enum):
     FULL_REMOTE = 'FULL_REMOTE'
     FOUR_DAY_WORK_WEEK = '4DAYWEEK'
@@ -27,11 +34,12 @@ class Interview:
 @dataclass
 class Job:
     author: Employer
-    title: str
-    location: str
-    job_description: str
-    salary: Salary
-    interview: Interview
     benefits: List[Benefit]
+    interview: Interview
+    job_description: str
+    location: str
+    salary: Salary
+    status: JobStatus
+    title: str
 
     id: int | None = None

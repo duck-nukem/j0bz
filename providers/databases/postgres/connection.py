@@ -15,7 +15,6 @@ def get_engine_url():
 ENGINE_URL = get_engine_url()
 db_engine = create_engine(
     ENGINE_URL,
-    echo=True,
     future=True,
 )
 

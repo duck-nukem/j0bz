@@ -7,3 +7,7 @@ class StripeException(PaymentProviderException):
 
 class StripeUserWithEmailAlreadyExistsException(StripeException):
     pass
+
+
+class StripeUserWithEmailNotFoundException(StripeException):
+    pass

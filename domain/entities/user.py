@@ -3,8 +3,8 @@ from enum import Enum
 
 
 class UserType(Enum):
-    employer = 'EMPLOYER'
-    candidate = 'CANDIDATE'
+    EMPLOYER = 'employer'
+    CANDIDATE = 'candidate'
 
 
 @dataclass
@@ -19,9 +19,9 @@ class User:
 
 @dataclass
 class Employer(User):
-    type = UserType.employer
+    type = UserType.EMPLOYER
 
 
 @dataclass
 class Candidate(User):
-    type = UserType.candidate
+    type = UserType.CANDIDATE

@@ -1,18 +1,31 @@
 from typing import Dict, Any, Iterable
 
 from domain.actions.jobs.assertions import assert_author_is_employer, assert_author_is_original_poster
-from domain.entities.job import Job
+from domain.actions.payments import register_payment_intent
+from domain.entities.job import Job, JobStatus
 from domain.entities.user import User
 from domain.repositories.job_repository import JobRepository
+from providers.payments.stripe import StripeSubscription
 
+# TODO: hard-coded for now, should come as an input
+SUBSCRIPTION_PRICE_ID = 'price_1JrnUqBrjtXa4dr1LqmienET'
 job_repository = JobRepository()
 
 
-def post_job(job: Job, author: User):
+def post_job(job: Job, author: User) -> Job:
     assert_author_is_employer(author)
-    job.author = author
 
-    job_repository.create(job)
+    job.author = author
+    job.status = JobStatus.AWAITING_PAYMENT
+    saved_job = job_repository.create(job)
+
+    register_payment_intent(
+        saved_job,
+        payer=author,
+        product=StripeSubscription(price_id=SUBSCRIPTION_PRICE_ID),
+    )
+
+    return saved_job
 
 
 def view_job(job: Job) -> Job:

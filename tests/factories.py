@@ -1,9 +1,7 @@
-from uuid import uuid4
-
 import factory
 from factory import SubFactory
 
-from domain.entities.job import Job, Salary, Interview
+from domain.entities.job import Job, Salary, Interview, JobStatus
 from domain.entities.user import Employer, Candidate, User, UserType
 
 
@@ -14,14 +12,14 @@ class UserFactory(factory.Factory):
     name = factory.Faker('name')
     username = factory.Faker('email')
     email_address = factory.Faker('email')
-    type = UserType.candidate
+    type = UserType.CANDIDATE
 
 
 class CandidateFactory(UserFactory):
     class Meta:
         model = Candidate
 
-    type = UserType.candidate
+    type = UserType.CANDIDATE
 
 
 class EmployerFactory(UserFactory):
@@ -29,7 +27,7 @@ class EmployerFactory(UserFactory):
         model = Employer
 
     name = factory.Faker('company')
-    type = UserType.employer
+    type = UserType.EMPLOYER
 
 
 class JobFactory(factory.Factory):
@@ -44,6 +42,7 @@ class JobFactory(factory.Factory):
         currency_code='USD',
         min=100,
     )
+    status = JobStatus.ACTIVE
     interview = Interview(
         rounds=2,
     )

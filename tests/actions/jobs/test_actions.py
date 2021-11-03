@@ -3,6 +3,7 @@ from unittest import TestCase, skip
 from unittest.mock import patch
 
 from domain.actions.jobs import update_job, delete_job, view_job, list_jobs, post_job
+from domain.actions.payments import link_customer_payment_details
 from domain.entities.job import Job
 from domain.repositories.job_repository import JobRepository
 from domain.repositories.user_repository import UserRepository
@@ -18,18 +19,22 @@ class TestActions(TestCase):
         super().setUp()
 
     @patch(f'{MODULE_PATH}.assert_author_is_employer')
+    @patch(f'{MODULE_PATH}.register_payment_intent')
     def test_post_job(
             self,
+            patched_payment_url_generator,
             patched_author_is_employer_assertion,
     ):
-        job = JobFactory()
-        self.simulate_user_post(job)
+        patched_payment_url_generator.return_value = 'https://example.com'
+        job = self.simulate_user_post(JobFactory())
 
         patched_author_is_employer_assertion.assert_called_once()
         saved_job = self.job_repository.get(job.id)
         self.assertEqual(job.title, saved_job.title)
 
-    def test_view_job(self):
+    @patch(f'{MODULE_PATH}.register_payment_intent')
+    def test_view_job(self, patched_generate_payment_url):
+        patched_generate_payment_url.return_value = 'https://example.com'
         job = JobFactory()
         self.simulate_user_post(job)
 
@@ -44,13 +49,16 @@ class TestActions(TestCase):
 
         patched_job_repository().get_all.assert_called_once()
 
+    @patch(f'{MODULE_PATH}.register_payment_intent')
     @patch(f'{MODULE_PATH}.assert_author_is_employer')
     @patch(f'{MODULE_PATH}.assert_author_is_original_poster')
     def test_update_job(
             self,
             patched_author_is_op_assertion,
             patched_author_is_employer_assertion,
+            patched_generate_payment_url,
     ):
+        patched_generate_payment_url.return_value = 'https://example.com'
         job = JobFactory()
         self.simulate_user_post(job)
         updated_title = 'CEO'
@@ -82,10 +90,12 @@ class TestActions(TestCase):
         patched_author_is_employer_assertion.assert_called_once()
         patched_job_repository().delete.assert_called_once_with(job)
 
-    def simulate_user_post(self, job: Job):
+    def simulate_user_post(self, job: Job) -> Job:
         job_author = EmployerFactory()
         self.user_repository.create(job_author)
-        post_job(job, author=job_author)
+        link_customer_payment_details(job_author, 'cus_SAMPLE')
+
+        return post_job(job, author=job_author)
 
 
 if __name__ == '__main__':

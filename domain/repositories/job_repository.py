@@ -19,6 +19,7 @@ class JobRepository(Repository):
             'title': job.title,
             'location': job.location,
             'job_description': job.job_description,
+            'status': job.status,
             'salary_min': job.salary.min,
             'salary_max': job.salary.max,
             'salary_currency_code': job.salary.currency_code,
@@ -49,6 +50,7 @@ class JobRepository(Repository):
             'location': job_instance.location,
             'job_description': job_instance.job_description,
             'salary': salary,
+            'status': job_instance.status,
             'interview': interview,
             'benefits': job_instance.benefits.split(LIST_SEPARATOR),
         }

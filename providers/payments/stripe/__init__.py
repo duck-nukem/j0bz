@@ -7,7 +7,8 @@ from stripe.api_resources.checkout import Session
 from domain.entities.job import Job
 from domain.entities.user import Employer, User
 from providers.payments.stripe.config import API_KEY, PAYMENT_SUCCESS_URL, PAYMENT_CANCEL_URL
-from providers.payments.stripe.exceptions import StripeUserWithEmailAlreadyExistsException
+from providers.payments.stripe.exceptions import StripeUserWithEmailAlreadyExistsException, \
+    StripeUserWithEmailNotFoundException
 from providers.payments.stripe.models import StripePaymentPlan, StripeSubscription
 
 stripe.api_key = API_KEY
@@ -39,15 +40,14 @@ def create_payment_account(user: User) -> str:
 
 def prepare_payment(
         job: Job,
-        payer: Employer,
+        customer_id: str,
         products: List[StripeSubscription],
 ) -> Session:
-    customer = get_customer_by_email(payer.email_address)
     subscription_payment = stripe.checkout.Session.create(
         line_items=[p.as_dict() for p in products],
         payment_method_types=['card'],
         mode='subscription',
-        customer=customer['id'],
+        customer=customer_id,
         client_reference_id=job.id,
         success_url=PAYMENT_SUCCESS_URL,
         cancel_url=PAYMENT_CANCEL_URL,
