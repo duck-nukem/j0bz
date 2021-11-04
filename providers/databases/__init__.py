@@ -26,6 +26,15 @@ class GenericDAO:
 
             return result
 
+    def get_all(self, page_size: int = 10, page_number: int = 1):
+        with connect() as db:
+            query = select(self.db_model_class) \
+                .limit(page_size) \
+                .offset(page_number * page_size)
+            results = db.execute(query).fetchall()
+
+            return [r._data[0] for r in results]
+
     def update(self, primary_key: int, values: Dict):
         with connect() as db:
             statement = update(self.db_model_class) \
