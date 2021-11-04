@@ -13,4 +13,4 @@ COPY . /opt/app
 RUN pip install -r /opt/app/requirements.txt
 
 EXPOSE 80
-CMD ["uvicorn", "providers.web.fastapi.main:app", "--port", "80", "--host", "0.0.0.0"]
+CMD ["./bin/run_webserver.sh"]
