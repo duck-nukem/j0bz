@@ -2,6 +2,9 @@ version: "3.6"
 services:
   app:
     build: .
+    command: ["uvicorn", "providers.web.fastapi.main:app", "--host", "0.0.0.0", "--reload"]
+    ports:
+      - "8000:8000"
     depends_on:
       db:
         condition: service_healthy

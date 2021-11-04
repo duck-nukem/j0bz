@@ -12,5 +12,5 @@ WORKDIR /opt/app
 COPY . /opt/app
 RUN pip install -r /opt/app/requirements.txt
 
-# Overwriting the default python entrypoint for better integration with tools (like IDEs)
-ENTRYPOINT []
+EXPOSE 80
+CMD ["uvicorn", "providers.web.fastapi.main:app", "--port", "80", "--host", "0.0.0.0"]
