@@ -5,6 +5,13 @@
     <title>Hello</title>
 </head>
 <body>
-and welcome!
+<h1>Jobs</h1>
+
+{% for job in jobs %}
+<a href="/j/{{job.id}}">{{ job.title }}</a>
+@
+<a href="/p/{{job.author.id}}">{{job.author.name}}</a>
+{{job.salary.currency_code}}{{ job.salary.range }}<br>
+{% endfor %}
 </body>
 </html>

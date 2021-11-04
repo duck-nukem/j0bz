@@ -1,17 +1,22 @@
 import uvicorn
 from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
 
+from domain.jobs.repositories import JobRepository
 from providers.web.fastapi.config import APP_HOST, APP_PORT, IS_DEBUG
+from providers.web.fastapi.routers import jobs
+from providers.web.fastapi.templates import TemplateResponse
 
 app = FastAPI()
-templates = Jinja2Templates(directory="/opt/app/providers/web/fastapi/templates")
 
 
 @app.get("/")
 def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    jobs = JobRepository().list()
+    print(jobs)
+    return TemplateResponse("index.html", {"request": request, 'jobs': jobs})
 
+
+app.include_router(jobs.router)
 
 if __name__ == "__main__":
     uvicorn.run(
