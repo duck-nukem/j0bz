@@ -7,7 +7,7 @@ from providers.databases.postgres import Base
 class Job(Base):
     __tablename__ = 'jobs'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     author = Column(Integer, ForeignKey('users.id'))
     title = Column(Unicode(256), nullable=False)
     location = Column(Unicode(64), nullable=False)
@@ -24,5 +24,6 @@ class Job(Base):
 class JobPayment(Base):
     __tablename__ = 'job_payments'
 
+    id = Column(Integer, primary_key=True)
     payment_id = Column(String(256), nullable=False)
-    job_id = Column(Integer, ForeignKey('jobs.id'), primary_key=True)
+    job_id = Column(Integer, ForeignKey('jobs.id'), nullable=False)

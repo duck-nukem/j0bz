@@ -2,16 +2,18 @@ import unittest
 from unittest import TestCase, skip
 from unittest.mock import patch
 
-from domain.jobs.actions import update_job, delete_job, view_job, list_jobs, post_job
-from domain.jobs.entities import Job
+from domain.jobs.actions import update_job, delete_job, view_job, list_jobs, post_job, update_job_payment_status
+from domain.jobs.entities import Job, JobStatus
 from domain.jobs.repositories import JobRepository
 from domain.payments.actions import link_customer_payment_details
+from domain.payments.exceptions import ActiveSubscriptionNotFoundException
 from domain.users.repositories import UserRepository
 from tests.factories import JobFactory, EmployerFactory
 
 MODULE_PATH = 'domain.jobs.actions'
 
 
+@patch(f'{MODULE_PATH}.register_payment_intent', return_value='http://t.co')
 class TestActions(TestCase):
     def setUp(self) -> None:
         self.user_repository = UserRepository()
@@ -19,24 +21,20 @@ class TestActions(TestCase):
         super().setUp()
 
     @patch(f'{MODULE_PATH}.assert_author_is_employer')
-    @patch(f'{MODULE_PATH}.register_payment_intent')
     def test_post_job(
             self,
-            patched_payment_url_generator,
+            _patched_payment_url_generator,
             patched_author_is_employer_assertion,
     ):
-        patched_payment_url_generator.return_value = 'https://example.com'
-        job = self.simulate_user_post(JobFactory())
+        job = self._simulate_user_post(JobFactory())
 
         patched_author_is_employer_assertion.assert_called_once()
         saved_job = self.job_repository.get(job.id)
         self.assertEqual(job.title, saved_job.title)
 
-    @patch(f'{MODULE_PATH}.register_payment_intent')
-    def test_view_job(self, patched_generate_payment_url):
-        patched_generate_payment_url.return_value = 'https://example.com'
+    def test_view_job(self, _patched_generate_payment_url):
         job = JobFactory()
-        self.simulate_user_post(job)
+        self._simulate_user_post(job)
 
         result = view_job(job)
 
@@ -49,18 +47,16 @@ class TestActions(TestCase):
 
         patched_job_repository().get_all.assert_called_once()
 
-    @patch(f'{MODULE_PATH}.register_payment_intent')
     @patch(f'{MODULE_PATH}.assert_author_is_employer')
     @patch(f'{MODULE_PATH}.assert_author_is_original_poster')
     def test_update_job(
             self,
             patched_author_is_op_assertion,
             patched_author_is_employer_assertion,
-            patched_generate_payment_url,
+            _patched_generate_payment_url,
     ):
-        patched_generate_payment_url.return_value = 'https://example.com'
         job = JobFactory()
-        self.simulate_user_post(job)
+        self._simulate_user_post(job)
         updated_title = 'CEO'
         patched_author_is_employer_assertion.reset_mock()
         patched_author_is_op_assertion.reset_mock()
@@ -90,7 +86,36 @@ class TestActions(TestCase):
         patched_author_is_employer_assertion.assert_called_once()
         patched_job_repository().delete.assert_called_once_with(job)
 
-    def simulate_user_post(self, job: Job) -> Job:
+    @patch(f'{MODULE_PATH}.assert_has_active_subscription')
+    def test_update_job_payment_status(
+            self,
+            patched_has_active_subscription,
+            _patched_register_payment_intent,
+    ):
+        saved_job = self._simulate_user_post()
+
+        update_job_payment_status(saved_job)
+
+        patched_has_active_subscription.assert_called_once_with(saved_job.id)
+        self.assertEqual(self.job_repository.get(saved_job.id).status, JobStatus.ACTIVE)
+
+    @patch(f'{MODULE_PATH}.assert_has_active_subscription')
+    def test_update_job_payment_status_without_sub(
+            self,
+            patched_has_active_subscription,
+            _patched_register_payment_intent,
+    ):
+        patched_has_active_subscription.side_effect = ActiveSubscriptionNotFoundException
+        saved_job = self._simulate_user_post()
+
+        update_job_payment_status(saved_job)
+
+        self.assertEqual(self.job_repository.get(saved_job.id).status, JobStatus.AWAITING_PAYMENT)
+
+    def _simulate_user_post(self, job: Job = None) -> Job:
+        if job is None:
+            job = JobFactory()
+
         job_author = EmployerFactory()
         self.user_repository.create(job_author)
         link_customer_payment_details(job_author, 'cus_SAMPLE')

@@ -11,3 +11,7 @@ class StripeUserWithEmailAlreadyExistsException(StripeException):
 
 class StripeUserWithEmailNotFoundException(StripeException):
     pass
+
+
+class StripePaidSubscriptionNotFoundException(StripeException):
+    pass

@@ -8,7 +8,7 @@ from domain.jobs.entities import Job
 from domain.users.entities import User
 from providers.payments.stripe.config import API_KEY, PAYMENT_SUCCESS_URL, PAYMENT_CANCEL_URL
 from providers.payments.stripe.exceptions import StripeUserWithEmailAlreadyExistsException, \
-    StripeUserWithEmailNotFoundException
+    StripeUserWithEmailNotFoundException, StripePaidSubscriptionNotFoundException
 from providers.payments.stripe.models import StripePaymentPlan, StripeSubscription
 
 stripe.api_key = API_KEY
@@ -54,3 +54,15 @@ def prepare_payment(
     )
 
     return subscription_payment
+
+
+def get_payment_subscription_status(checkout_id: str) -> str:
+    session = stripe.checkout.Session.retrieve(checkout_id)
+
+    if session['subscription'] is None:
+        raise StripePaidSubscriptionNotFoundException
+
+    subscription_id = session['subscription']['id']
+    subscription = stripe.Subscription.retrieve(subscription_id)
+
+    return subscription['status']

@@ -1,10 +1,12 @@
 from typing import Dict, Any, Iterable
 
 from domain.jobs.assertions import assert_author_is_employer, assert_author_is_original_poster
-from domain.payments.actions import register_payment_intent
 from domain.jobs.entities import Job, JobStatus
-from domain.users.entities import User
 from domain.jobs.repositories import JobRepository
+from domain.payments.actions import register_payment_intent
+from domain.payments.assertions import assert_has_active_subscription
+from domain.payments.exceptions import ActiveSubscriptionNotFoundException
+from domain.users.entities import User
 from providers.payments.stripe import StripeSubscription
 
 # TODO: hard-coded for now, should come as an input
@@ -48,3 +50,14 @@ def delete_job(job: Job, author: User):
     assert_author_is_original_poster(author, job.author)
 
     job_repository.delete(job)
+
+
+def update_job_payment_status(job: Job):
+    try:
+        assert_has_active_subscription(job.id)
+    except ActiveSubscriptionNotFoundException:
+        job.status = JobStatus.AWAITING_PAYMENT
+    else:
+        job.status = JobStatus.ACTIVE
+
+    job_repository.update(job, {'status': job.status})
