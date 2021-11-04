@@ -24,6 +24,10 @@ class Salary:
     min: float
     max: float | None = None
 
+    @property
+    def range(self):
+        return self.min if self.max is None else f'{self.min} - {self.max}'
+
 
 @dataclass
 class Interview:
