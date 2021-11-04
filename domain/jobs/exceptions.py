@@ -6,5 +6,5 @@ class UnauthorizedPostException(JobPostException):
     pass
 
 
-class AuthorIsNotOPException(JobPostException):
+class AuthorIsNotOPException(UnauthorizedPostException):
     pass

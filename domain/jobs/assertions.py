@@ -12,5 +12,5 @@ def assert_author_is_employer(poster: Any) -> TypeGuard[Employer]:
 
 
 def assert_author_is_original_poster(author: Employer, original_poster: Employer):
-    if author != original_poster:
+    if author.id != original_poster.id:
         raise AuthorIsNotOPException
