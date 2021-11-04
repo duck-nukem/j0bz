@@ -33,8 +33,8 @@ class TestAuthorIsOriginalAuthor(TestCase):
         self.user_repository = UserRepository()
 
     def test_any_employer_is_not_the_original_poster(self):
-        any_employer = EmployerFactory()
-        job = JobFactory()
+        any_employer = EmployerFactory(id=1)
+        job = JobFactory(author__id=2)
 
         with self.assertRaises(AuthorIsNotOPException):
             # noinspection PyTypeChecker
