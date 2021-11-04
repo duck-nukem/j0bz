@@ -1,8 +1,8 @@
 from typing import Dict
 
-from domain.entities.job import Job, Salary, Interview
-from domain.repositories import Repository
-from domain.repositories.user_repository import UserRepository
+from domain.jobs.entities import Job, Salary, Interview
+from providers.repositories import Repository
+from domain.users.repositories import UserRepository
 from providers.databases import GenericDAO
 from providers.databases.postgres.models.job import Job as JobModel
 

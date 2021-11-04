@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List
 
-from domain.entities.user import Employer
+from domain.users.entities import Employer
 
 
 class JobStatus(Enum):

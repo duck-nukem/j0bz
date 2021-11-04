@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, Enum, Unicode, String, ForeignKey
 
-from domain.entities.user import UserType
+from domain.users.entities import UserType
 from providers.databases.postgres import Base
 
 

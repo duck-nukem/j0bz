@@ -1,7 +1,7 @@
 from typing import TypeGuard, Any
 
-from domain.actions.jobs.exceptions import UnauthorizedPostException, AuthorIsNotOPException
-from domain.entities.user import Employer, User
+from domain.jobs.exceptions import UnauthorizedPostException, AuthorIsNotOPException
+from domain.users.entities import Employer
 
 
 def assert_author_is_employer(poster: Any) -> TypeGuard[Employer]:

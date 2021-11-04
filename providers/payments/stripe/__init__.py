@@ -4,8 +4,8 @@ import stripe
 from stripe import Customer
 from stripe.api_resources.checkout import Session
 
-from domain.entities.job import Job
-from domain.entities.user import Employer, User
+from domain.jobs.entities import Job
+from domain.users.entities import User
 from providers.payments.stripe.config import API_KEY, PAYMENT_SUCCESS_URL, PAYMENT_CANCEL_URL
 from providers.payments.stripe.exceptions import StripeUserWithEmailAlreadyExistsException, \
     StripeUserWithEmailNotFoundException

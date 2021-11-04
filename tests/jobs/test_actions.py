@@ -2,14 +2,14 @@ import unittest
 from unittest import TestCase, skip
 from unittest.mock import patch
 
-from domain.actions.jobs import update_job, delete_job, view_job, list_jobs, post_job
-from domain.actions.payments import link_customer_payment_details
-from domain.entities.job import Job
-from domain.repositories.job_repository import JobRepository
-from domain.repositories.user_repository import UserRepository
+from domain.jobs.actions import update_job, delete_job, view_job, list_jobs, post_job
+from domain.jobs.entities import Job
+from domain.jobs.repositories import JobRepository
+from domain.payments.actions import link_customer_payment_details
+from domain.users.repositories import UserRepository
 from tests.factories import JobFactory, EmployerFactory
 
-MODULE_PATH = 'domain.actions.jobs'
+MODULE_PATH = 'domain.jobs.actions'
 
 
 class TestActions(TestCase):

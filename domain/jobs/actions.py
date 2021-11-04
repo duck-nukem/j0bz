@@ -1,10 +1,10 @@
 from typing import Dict, Any, Iterable
 
-from domain.actions.jobs.assertions import assert_author_is_employer, assert_author_is_original_poster
-from domain.actions.payments import register_payment_intent
-from domain.entities.job import Job, JobStatus
-from domain.entities.user import User
-from domain.repositories.job_repository import JobRepository
+from domain.jobs.assertions import assert_author_is_employer, assert_author_is_original_poster
+from domain.payments.actions import register_payment_intent
+from domain.jobs.entities import Job, JobStatus
+from domain.users.entities import User
+from domain.jobs.repositories import JobRepository
 from providers.payments.stripe import StripeSubscription
 
 # TODO: hard-coded for now, should come as an input

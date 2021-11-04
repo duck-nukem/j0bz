@@ -1,6 +1,6 @@
-from domain.actions.payments import link_customer_payment_details
-from domain.entities.user import User
-from domain.repositories.user_repository import UserRepository
+from domain.payments.actions import link_customer_payment_details
+from domain.users.entities import User
+from domain.users.repositories import UserRepository
 from providers.payments.stripe import create_payment_account
 
 user_repository = UserRepository()

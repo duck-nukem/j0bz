@@ -1,9 +1,9 @@
 import unittest
 from unittest import TestCase
 
-from domain.actions.jobs.assertions import assert_author_is_employer, assert_author_is_original_poster
-from domain.actions.jobs.exceptions import UnauthorizedPostException, AuthorIsNotOPException
-from domain.repositories.user_repository import UserRepository
+from domain.jobs.assertions import assert_author_is_employer, assert_author_is_original_poster
+from domain.jobs.exceptions import UnauthorizedPostException, AuthorIsNotOPException
+from domain.users.repositories import UserRepository
 from tests.factories import EmployerFactory, JobFactory, CandidateFactory, UserFactory
 
 

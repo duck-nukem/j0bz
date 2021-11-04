@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, Unicode, String, ForeignKey, Enum
 
-from domain.entities.job import JobStatus
+from domain.jobs.entities import JobStatus
 from providers.databases.postgres import Base
 
 

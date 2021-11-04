@@ -1,7 +1,7 @@
 from stripe.api_resources.checkout import Session
 
-from domain.entities.job import Job
-from domain.entities.user import Employer, User
+from domain.jobs.entities import Job
+from domain.users.entities import Employer, User
 from providers.databases import GenericDAO
 from providers.databases.postgres.models import StripeUser
 from providers.databases.postgres.models.job import JobPayment

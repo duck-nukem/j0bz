@@ -2,8 +2,8 @@ from typing import Dict
 
 from sqlalchemy import select
 
-from domain.entities.user import User
-from domain.repositories import Repository
+from domain.users.entities import User
+from providers.repositories import Repository
 from providers.databases import GenericDAO
 from providers.databases.postgres.connection import connect
 from providers.databases.postgres.models.user import User as UserModel

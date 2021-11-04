@@ -1,8 +1,8 @@
 import factory
 from factory import SubFactory
 
-from domain.entities.job import Job, Salary, Interview, JobStatus
-from domain.entities.user import Employer, Candidate, User, UserType
+from domain.jobs.entities import Job, Salary, Interview, JobStatus
+from domain.users.entities import Employer, Candidate, User, UserType
 
 
 class UserFactory(factory.Factory):
