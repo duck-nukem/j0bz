@@ -47,3 +47,4 @@ class JobFactory(factory.Factory):
         rounds=2,
     )
     benefits = []
+    posted_at = factory.Faker('date_time_this_year')

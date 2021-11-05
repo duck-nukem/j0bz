@@ -25,7 +25,8 @@ class JobRepository(Repository):
             'salary_currency_code': job.salary.currency_code,
             'interview_rounds': job.interview.rounds,
             'interview_description': job.interview.description,
-            'benefits': LIST_SEPARATOR.join([b.value for b in job.benefits])
+            'benefits': LIST_SEPARATOR.join([b.value for b in job.benefits]),
+            'posted_at': job.posted_at,
         }
 
         if job.id:
@@ -43,6 +44,9 @@ class JobRepository(Repository):
             rounds=job_instance.interview_rounds,
             description=job_instance.interview_description,
         )
+        benefits = job_instance.benefits.split(LIST_SEPARATOR) \
+            if LIST_SEPARATOR in job_instance.benefits \
+            else []
         job_dict = {
             'id': job_instance.id,
             'author': UserRepository().get(job_instance.author),
@@ -52,6 +56,7 @@ class JobRepository(Repository):
             'salary': salary,
             'status': job_instance.status,
             'interview': interview,
-            'benefits': job_instance.benefits.split(LIST_SEPARATOR),
+            'benefits': benefits,
+            'posted_at': job_instance.posted_at,
         }
         return Job(**job_dict)

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 from typing import List
 
@@ -45,5 +46,6 @@ class Job:
     salary: Salary
     status: JobStatus
     title: str
+    posted_at: datetime
 
     id: int | None = None

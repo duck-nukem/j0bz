@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Unicode, String, ForeignKey, Enum
+from sqlalchemy import Column, Integer, Unicode, String, ForeignKey, Enum, DateTime
 
 from domain.jobs.entities import JobStatus
 from providers.databases.postgres import Base
@@ -18,6 +18,7 @@ class Job(Base):
     interview_rounds = Column(Integer, nullable=False)
     interview_description = Column(String(1000), nullable=True)
     benefits = Column(String(256), nullable=True)
+    posted_at = Column(DateTime(), nullable=False)
     status = Column(Enum(JobStatus), nullable=False)
 
 
