@@ -30,9 +30,10 @@ class GenericDAO:
         with connect() as db:
             query = select(self.db_model_class) \
                 .limit(page_size) \
-                .offset(page_number * page_size)
+                .offset((page_number - 1) * page_size)
             results = db.execute(query).fetchall()
 
+            # Arrived here via debugging the entries inside results, must be a better way
             return [r._data[0] for r in results]
 
     def update(self, primary_key: int, values: Dict):
