@@ -36,7 +36,7 @@ class TestActions(TestCase):
         job = JobFactory()
         self._simulate_user_post(job)
 
-        result = view_job(job)
+        result = view_job(job.id)
 
         self.assertEqual(result.title, job.title)
 

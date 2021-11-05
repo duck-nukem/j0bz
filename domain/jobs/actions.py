@@ -30,12 +30,12 @@ def post_job(job: Job, author: User) -> Job:
     return saved_job
 
 
-def view_job(job: Job) -> Job:
-    return job_repository.get(job.id)
+def view_job(job_id: int) -> Job:
+    return job_repository.get(job_id)
 
 
 def list_jobs() -> Iterable[Job]:
-    return job_repository.get_all()
+    return job_repository.list()
 
 
 def update_job(job: Job, update: Dict[str, Any], author: User):
