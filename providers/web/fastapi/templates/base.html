@@ -4,6 +4,33 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/css/halfmoon-variables.min.css" rel="stylesheet"/>
+    <style>
+        :root {
+        {% with theme = get_random_theme() %}
+            --dark-color: {{ theme.dark }};
+            --light-color: {{ theme.light }};
+        {% endwith %}
+
+            --lm-card-border-color: var(--light-color);
+            --lm-card-text-color: var(--light-color);
+            --primary-color-light: var(--light-color);
+            --primary-color-very-light: var(--light-color);
+            --text-color-on-primary-color-bg: var(--light-color);
+            --lm-base-text-color: var(--light-color);
+
+            --lm-base-body-bg-color: var(--dark-color);
+            --lm-card-bg-color: var(--dark-color);
+            --primary-box-shadow-color-darker: var(--dark-color);
+            --primary-box-shadow-color: var(--dark-color);
+            --primary-color-dark: var(--dark-color);
+            --primary-color-very-dark: var(--dark-color);
+            --primary-color: var(--dark-color);
+        }
+
+        a {
+            color: var(--light-color);
+        }
+    </style>
 </head>
 <body>
 <div class="page-wrapper">
