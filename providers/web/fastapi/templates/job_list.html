@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+    {% for job in jobs %}
+        <div class="card">
+            <h2 class="card-title">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm">
+                            <a href="/j/{{ job.id }}">{{ job.title }}</a>
+                        </div>
+                        <div class="col-sm">
+                            <span class="float-sm-right">{{ job.salary.range|currency(job.salary.currency_code) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </h2>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm">
+                        <a href="/u/{{ job.author.id }}">{{ job.author.name }}</a>
+                    </div>
+                    <div class="col-sm">{{ job.posted_at|datetime }}</div>
+                    <div class="col-sm"></div>
+                </div>
+                <p>
+                    {% for benefit in job.benefits %}
+                        <span class="badge badge-success">{{ benefit }}</span>
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

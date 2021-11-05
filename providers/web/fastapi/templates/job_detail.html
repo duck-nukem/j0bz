@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{job.title}}</title>
-</head>
-<body>
-<h1>{{job.title}}</h1>
-<h3><a href="/p/{{job.author.id}}">{{job.author.name}}</a></h3>
-{{job.salary.currency_code}}{{ job.salary.range }}<br>
-{{job.description}}
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+    <h1>{{ job.title }}</h1>
+    {{ request.language }}
+    <h3><a href="/u/{{ job.author.id }}">{{ job.author.name }}</a></h3>
+    <h4>{{ job.posted_at }}</h4>
+    {{ job.salary.currency_code }}{{ job.salary.range }}<br>
+    {{ job.description }}
+{% endblock %}
