@@ -19,3 +19,8 @@ In here you inject a kind of object that will manage persistence, like a class i
 # Renderers
 
 Finally there are renderers, which are web frameworks, terminal applications, whatever. At this stage you'll need to worry about problems specific to the application's type (think of authentication in webapps for example). Other than these, this layer should mostly be configuration, like setting up a route to a perform a certain domain action.
+
+
+## Lessons learned
+
+This was a fun exercise, and I definitely see value in this approach, it's very lean, and uses very few dependencies compared to other solutions - *BUT* Django (to remain in the Python realm) beats this in terms of productivity and time to launch, while still offering this architecture as an evolutionary next step once the product is deemed profitable, and needs to separate domain specific actions/events from the framework.
